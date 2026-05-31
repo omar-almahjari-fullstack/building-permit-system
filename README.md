@@ -1,100 +1,73 @@
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
+
 <!--
-	README Project: نظام استخراج رخصة بناء
-	تم إعداد الملف باللغة العربية وعرض لقطات شاشة من مجلد المشروع
+    Project README: Building Permit Management System
 -->
 
-# مشروع: نظام استخراج رخصة بناء
+# Building Permit Management System
 
-نظام ويب مبني باستخدام Laravel لإدارة طلبات استخراج تصاريح البناء، مع واجهات لمستخدمي المنصة (عرض الصفحة الرئيسية، إنشاء الطلبات، وعرض التقارير).
+A web-based system built with Laravel for managing building permit applications, including user-facing interfaces for submitting requests, tracking status, and generating reports.
 
-## وصف المشروع
+---
 
-هذا المشروع يتيح للمستخدمين تقديم طلبات ترخيص بناء، متابعة حالة الطلب، وإصدار تقارير ملخّصة وتفصيلية عن الطلبات. يتضمن المشروع مزايا مثل:
+## Project Description
 
-- نظام تسجيل وتوثيق للمستخدمين.
-- نموذج تقديم طلب إلكتروني متكامل (رفع مرفقات، بيانات الموقع، معلومات المالك).
-- لوحة عرض لطلبات المستخدم وإدارة الحالات.
-- إنشاء وتصدير تقارير (ملخّصة/تفصيلية) بصيغة PDF.
-- إشعارات ونظام تسجيل النشاطات.
+This system allows users to submit building permit applications, track their status, and generate summarized and detailed reports. It includes the following features:
 
-## المزايا الرئيسية
+- User registration and authentication system.
+- Complete online application form (attachments, location data, owner information).
+- Dashboard for viewing and managing user requests.
+- Generation and export of PDF reports (summary and detailed).
+- Notifications and activity logging system.
 
-- إدارة المستخدمين والصلاحيات
-- تقديم ومتابعة الطلبات
-- رفع مرفقات وتقارير مرتبطة بكل طلب
-- تصدير وطباعة تقارير بصيغة PDF
+---
 
-## متطلبات التشغيل
+## Key Features
 
-- PHP >= 8.0
-- Composer
-- MySQL أو أي قاعدة بيانات مدعومة
-- Node.js و npm (للأصول الأمامية و Vite)
+- User and role management
+- Application submission and tracking
+- File attachments per request
+- PDF report generation and printing
 
-## طريقة الإعداد المحلية
+---
 
-1. انسخ المستودع إلى جهازك.
-2. نسخ ملف البيئة:
+## Screenshots
 
-```bash
-cp .env.example .env
-```
+Home Page:
 
-3. تثبيت الحزم:
+![Home](resources/assets/images/Home.png)
 
-```bash
-composer install
-npm install
-npm run build
-```
+Request Page:
 
-4. إنشاء مفتاح التطبيق:
+![Request](resources/assets/images/Request.png)
 
-```bash
-php artisan key:generate
-```
+Report Example:
 
-5. إعداد قاعدة البيانات ثم تشغيل المهاجرات وملء البيانات (إن وُجدت):
+![Report](resources/assets/images/Report.png)
 
-```bash
-php artisan migrate --seed
-```
+---
 
-6. تشغيل الخادم المحلي:
+## Important Files
 
-```bash
-php artisan serve
-```
+- Report Controller: `app/Http/Controllers/ReportController.php`
+- Report Views: `resources/views/modules/auth/reports/`
+- Attachments Storage: `storage/attachments/`
 
-افتح المتصفح على `http://127.0.0.1:8000`.
+---
 
-## لقطات الشاشة
+## Contributing
 
-الهوم (الصفحة الرئيسية):
+If you would like to contribute or report an issue, feel free to open an Issue or submit a Pull Request on the project repository.
 
-![الهوم](resources/assets/images/Home.png)
+---
 
-الطلب (نموذج الطلب/قائمة الطلبات):
+## License
 
-![الطلب](resources/assets/images/Request.png)
-
-التقرير (مثال على تقرير/ملف مرفق):
-
-![التقرير](resources/assets/images/amr.jpg)
-
-> ملاحظة: إن أردت استبدال صور الشاشات، ضع الملفات المرغوبة في `resources/assets/images/` ثم حدّث أسماء المسارات أعلاه.
-
-## ملفات مهمة في المشروع
-
-- الكنترولرات المتعلقة بالتقارير: `app/Http/Controllers/ReportController.php`
-- قوالب العرض للتقارير: `resources/views/modules/auth/reports/`
-- مجلد تخزين المرفقات: `storage/attachments/`
-
-## المساهمة والتواصل
-
-إذا رغبت بالمساهمة أو الإبلاغ عن مشكلة، افتح Issue أو قدم Pull Request على حساب GitHub الخاص بالمشروع.
-
-## الترخيص
-
-مشروع مفتوح المصدر — راجع `composer.json` وملفات الترخيص في المستودع لمزيد من التفاصيل.
-
+Open-source project — see `composer.json` and repository files for more details.
