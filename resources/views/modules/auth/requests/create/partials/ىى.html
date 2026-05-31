@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام معاملات البناء السعودي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --secondary-blue: #2c5282;
+            --gold-accent: #d69e2e;
+            --success-green: #2f855a;
+            --light-gray: #f7fafc;
+            --medium-gray: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--light-gray);
+        }
+
+        .government-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 50px;
+            margin-left: 15px;
+        }
+
+        .process-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid var(--medium-gray);
+            overflow-x: auto;
+        }
+
+        .process-stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 3rem;
+            min-width: 800px;
+        }
+
+        .process-line {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background-color: var(--medium-gray);
+            z-index: 1;
+            border-radius: 3px;
+        }
+
+        .process-fill {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-green), var(--gold-accent));
+            z-index: 2;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(47, 133, 90, 0.3);
+        }
+
+        .process-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            width: calc(100% / 7);
+        }
+
+        .step-bubble {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .step-bubble::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .process-step.completed .step-bubble {
+            background-color: var(--success-green);
+            border-color: rgba(47, 133, 90, 0.2);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .process-step.active .step-bubble {
+            border-color: var(--gold-accent);
+            background-color: white;
+            color: var(--primary-blue);
+            transform: scale(1.1);
+            animation: pulse 2s infinite;
+        }
+
+        .process-step.active .step-bubble::before {
+            opacity: 1;
+        }
+
+        .step-icon {
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .process-step.completed .step-icon {
+            transform: scale(1.2);
+        }
+
+        .step-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #718096;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .process-step.completed .step-title,
+        .process-step.active .step-title {
+            color: var(--primary-blue);
+            transform: translateY(5px);
+        }
+
+        .process-step.active .step-title {
+            font-weight: 700;
+        }
+
+        .step-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--gold-accent);
+            transition: width 0.3s ease;
+        }
+
+        .process-step.active .step-title::after {
+            width: 20px;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(214, 158, 46, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(214, 158, 46, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(214, 158, 46, 0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-accent), #b7791f);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 158, 46, 0.4);
+            color: white;
+        }
+
+        .btn-outline-blue {
+            background-color: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-blue:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--success-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 2px solid white;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 4;
+        }
+
+        .process-step.completed .completion-badge {
+            opacity: 1;
+            transform: scale(1);
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .official-icon {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .form-section {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+
+    <main class="container my-5">
+        <div class="process-container">
+            <div class="process-stepper">
+                <div class="process-line"></div>
+                <div class="process-fill" style="width: 14.28%;"></div>
+
+                <!-- المراحل السبع -->
+                <div class="process-step completed" data-step="1">
+                    <div class="step-bubble">
+                        <i class="bi bi-paperclip step-icon"></i>
+                        <span class="completion-badge"><i class="bi bi-check"></i></span>
+                    </div>
+                    <span class="step-title">المرفقات</span>
+                </div>
+
+                <div class="process-step completed" data-step="2">
+                    <div class="step-bubble">
+                        <i class="bi bi-house-gear step-icon"></i>
+                        <span class="completion-badge"><i class="bi bi-check"></i></span>
+                    </div>
+                    <span class="step-title">مكونات البناء</span>
+                </div>
+
+                <div class="process-step active" data-step="3">
+                    <div class="step-bubble">
+                        <i class="bi bi-person-vcard step-icon"></i>
+                    </div>
+                    <span class="step-title">المواطن</span>
+                </div>
+
+                <div class="process-step" data-step="4">
+                    <div class="step-bubble">
+                        <i class="bi bi-rulers step-icon"></i>
+                    </div>
+                    <span class="step-title">الأبعاد</span>
+                </div>
+
+                <div class="process-step" data-step="5">
+                    <div class="step-bubble">
+                        <i class="bi bi-calculator step-icon"></i>
+                    </div>
+                    <span class="step-title">احتساب الرسوم</span>
+                </div>
+
+                <div class="process-step" data-step="6">
+                    <div class="step-bubble">
+                        <i class="bi bi-file-earmark-text step-icon"></i>
+                    </div>
+                    <span class="step-title">بيانات الرخصة</span>
+                </div>
+
+                <div class="process-step" data-step="7">
+                    <div class="step-bubble">
+                        <i class="bi bi-send-check step-icon"></i>
+                    </div>
+                    <span class="step-title">الطلب</span>
+                </div>
+            </div>
+
+            <!-- محتوى المرحلة الحالية -->
+            <div class="step-content active" id="step3">
+
+            </div>
+
+            <!-- أزرار التنقل (الآن خارج step-content) -->
+            <div class="nav-buttons">
+                <button class="btn btn-outline-blue" id="prevBtn">
+                    <i class="bi bi-arrow-right"></i> السابق
+                </button>
+                <button class="btn btn-gold" id="nextBtn">
+                    التالي <i class="bi bi-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.process-step');
+            const stepContents = document.querySelectorAll('.step-content');
+            const progressFill = document.querySelector('.process-fill');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            let currentStep = 3;
+            const totalSteps = steps.length;
+
+            function updateProgress() {
+                // حساب النسبة المئوية للتقدم
+                const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+
+                // تحديث حالة الخطوات
+                steps.forEach((step, index) => {
+                    step.classList.remove('completed', 'active');
+
+                    if (index < currentStep - 1) {
+                        step.classList.add('completed');
+                    } else if (index === currentStep - 1) {
+                        step.classList.add('active');
+                    }
+                });
+
+                // تحديث حالة الأزرار
+                prevBtn.disabled = currentStep === 1;
+                nextBtn.textContent = currentStep === totalSteps ? 'إرسال الطلب' : 'التالي';
+
+                // إظهار المحتوى المناسب
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (parseInt(content.id.replace('step', '')) === currentStep) {
+                        content.classList.add('active');
+                    }
+                });
+            }
+
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateProgress();
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateProgress();
+                } else {
+                    alert('تم إرسال الطلب بنجاح');
+                }
+            });
+
+            // التهيئة الأولية
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

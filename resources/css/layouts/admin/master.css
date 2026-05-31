@@ -1,0 +1,584 @@
+/* Importing Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+ font-family: "Cairo", sans-serif;
+}
+*a{
+  text-decoration: none;
+}
+
+
+
+body {
+
+
+  font-family: "Cairo", sans-serif;
+  font-optical-sizing: auto;
+
+  font-style: normal;
+  font-variation-settings:"slnt" 0;
+
+  min-height: 100vh;
+  background: linear-gradient(#F1F3FF, #CBD4FF);
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+.a {
+  text-decoration: none;
+}
+.logo {
+  line-height: 1;
+  text-decoration: none;
+}
+
+@media (min-width: 1200px) {
+  .logo {
+    width: 280px;
+  }
+}
+
+.logo img {
+  max-height: 55px;
+  margin-right: 6px;
+}
+
+.logo span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+}
+
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 60px;
+  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+  background-color: #fff;
+  padding-left: 20px;
+  /* Toggle Sidebar Button */
+  /* Search Bar */
+}
+
+.header .toggle-sidebar-btn {
+  font-size: 31px;
+
+  cursor: pointer;
+  color: #000000;
+}
+
+.header .search-bar {
+  min-width: 360px;
+  padding: 0 20px;
+}
+
+@media (max-width: 1199px) {
+  .header .search-bar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+    background: white;
+    z-index: 99;
+    transition: 0.3s;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .header .search-bar-show {
+    top: 60px;
+    visibility: visible;
+    opacity: 1;
+  }
+
+}
+
+.header .search-form {
+  width: 100%;
+}
+
+.header .search-form input {
+  border: 0;
+  font-size: 14px;
+  color: #012970;
+  border: 1px solid rgba(1, 41, 112, 0.2);
+  padding: 7px 38px 7px 8px;
+  border-radius: 3px;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.header .search-form input:focus,
+.header .search-form input:hover {
+  outline: none;
+  box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+  border: 1px solid rgba(1, 41, 112, 0.3);
+}
+
+.header .search-form button {
+  border: 0;
+  padding: 0;
+  margin-left: -30px;
+  background: none;
+}
+
+.header .search-form button i {
+  color: #012970;
+}
+
+/*--------------------------------------------------------------
+# Header Nav
+--------------------------------------------------------------*/
+.header-nav ul {
+  list-style: none;
+}
+
+.header-nav>ul {
+  margin: 0;
+  padding: 0;
+}
+
+.header-nav .nav-icon {
+  font-size: 22px;
+  color: #012970;
+  margin: 0 8px;
+  position: relative;
+}
+
+.header-nav .nav-profile {
+  color: #012970;
+}
+
+.header-nav .nav-profile img {
+  max-height: 36px;
+}
+
+.header-nav .nav-profile span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.header-nav .badge-number {
+  position: absolute;
+  inset: -2px -5px auto auto;
+  font-weight: normal;
+  font-size: 12px;
+  padding: 3px 6px;
+}
+
+.header-nav .notifications {
+  inset: 8px -15px auto auto !important;
+}
+
+.header-nav .notifications .notification-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 10px;
+  transition: 0.3s;
+}
+
+.header-nav .notifications .notification-item i {
+  margin: 0 20px 0 10px;
+  font-size: 24px;
+}
+
+.header-nav .notifications .notification-item h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.header-nav .notifications .notification-item p {
+  font-size: 13px;
+  margin-bottom: 3px;
+  color: #919191;
+}
+
+.header-nav .notifications .notification-item:hover {
+  background-color: #f6f9ff;
+}
+
+.header-nav .messages {
+  inset: 8px -15px auto auto !important;
+}
+
+.header-nav .messages .message-item {
+  padding: 15px 10px;
+  transition: 0.3s;
+}
+
+.header-nav .messages .message-item a {
+  display: flex;
+}
+
+.header-nav .messages .message-item img {
+  margin: 0 20px 0 10px;
+  max-height: 40px;
+}
+
+.header-nav .messages .message-item h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444444;
+}
+
+.header-nav .messages .message-item p {
+  font-size: 13px;
+  margin-bottom: 3px;
+  color: #919191;
+}
+
+.header-nav .messages .message-item:hover {
+  background-color: #f6f9ff;
+}
+
+.header-nav .profile {
+  min-width: 240px;
+  padding-bottom: 0;
+  top: 8px !important;
+}
+
+.header-nav .profile .dropdown-header h6 {
+  font-size: 18px;
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #444444;
+}
+
+.header-nav .profile .dropdown-header span {
+  font-size: 14px;
+}
+
+.header-nav .profile .dropdown-item {
+  font-size: 14px;
+  padding: 10px 15px;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.header-nav .profile .dropdown-item i {
+  margin-right: 10px;
+  font-size: 18px;
+  line-height: 0;
+}
+
+.header-nav .profile .dropdown-item:hover {
+  background-color: #f6f9ff;
+}
+
+/*--------------------------------------------------------------
+# Sidebar
+--------------------------------------------------------------*/
+
+.sidebar {
+
+   right: 0; /* ضع القائمة في اليمين */
+  left: auto; /* ألغِ التمركز في اليسار */
+  direction: rtl; /* لجعل النصوص من اليمين إلى اليسار */
+  text-align: right;
+  /* top: 0; */
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 200px;
+  height: 93vh;
+  background: #151A2D;
+  transition: all 0.4s ease;
+   padding-top: 20px;
+}
+
+.sidebar.collapsed {
+  width: 85px;
+}
+
+/* .sidebar .sidebar-header {
+  display: flex;
+  position: relative;
+  padding: 25px 20px;
+  align-items: center;
+  justify-content: space-between;
+} */
+.aaa {
+    /* منع التمرير الأفقي تماماً */
+  z-index: 100;
+
+}
+
+
+.sidebar-toggler{
+  z-index: 20;
+  margin-right: 15px;
+  height: 43px;
+  width: 43px;
+  border-radius: 5px;
+  border: #d3d1d1 1px solid;
+}
+.sidebar-toggler:hover{
+    background-color: #d7d9dd;
+}
+
+
+
+/* .sidebar-header .header-logo img {
+  width: 46px;
+  height: 46px;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+
+} */
+
+.sidebar.collapsed .sidebar-header .sidebar-toggler {
+  transform: translate(-4px, 65px);
+}
+
+.sidebar-header .sidebar-toggler span,
+.sidebar-menu-button span {
+  font-size: 1.75rem;
+  transition: 0.4s ease;
+}
+
+.sidebar.collapsed .sidebar-header .sidebar-toggler span {
+
+}
+
+.sidebar-header .sidebar-toggler:hover {
+  background: #d9e1fd;
+}
+
+
+.sidebar-nav .nav-list {
+  list-style: none;
+  display: flex;
+
+  gap: 1px;
+  padding: 0 15px;
+  flex-direction: column;
+
+  transition: 0.4s ease;
+
+}
+
+.sidebar .sidebar-nav .primary-nav {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  /* padding-bottom: 20px; */
+  height: 76vh;
+  scrollbar-color: transparent transparent;
+}
+
+.sidebar-nav,.nav-container{
+    height: 92%;
+}
+
+.sidebar .sidebar-nav .primary-nav:hover {
+  scrollbar-color: #EEF2FF transparent;
+}
+
+.sidebar.collapsed .sidebar-nav .primary-nav {
+
+overflow-y: visible;
+}
+
+/* .dropdown-menu{
+    z-index: 19999;
+    position: fixed;
+} */
+
+.sidebar-nav .nav-item .nav-link,.ajax-link {
+  color: #fff;
+  display: flex;
+  gap: 12px;
+  white-space: nowrap;
+  border-radius: 8px;
+  padding: 7px 15px;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid #151A2D;
+  transition: 0.4s ease;
+
+}
+
+.sidebar-nav .nav-item:is(:hover, .open)>.nav-link:not(.dropdown-title) {
+  color: #151A2D;
+  background: #EEF2FF;
+}
+
+.sidebar .nav-link .nav-label {
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .nav-link :where(.nav-label, .dropdown-icon) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar.collapsed .nav-link .dropdown-icon {
+  transition: opacity 0.3s 0s ease;
+}
+
+.sidebar-nav .secondary-nav {
+  background: #151A2D;
+}
+
+.sidebar-nav .nav-item {
+  position: relative;
+}
+
+/* Dropdown Stylings */
+.sidebar-nav .dropdown-container .dropdown-icon {
+  margin: 0 -4px 0 auto;
+  transition: transform 0.4s ease, opacity 0.3s 0.2s ease;
+}
+
+.sidebar-nav .dropdown-container.open .dropdown-icon {
+
+}
+
+.sidebar-nav .dropdown-menu {
+  height: 0;
+  overflow-y: hidden;
+  list-style: none;
+  padding-left: 15px;
+  transition: height 0.4s ease;
+}
+
+.nav-item .dropdown-menu{
+  z-index: 9999;
+}
+
+.sidebar.collapsed .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: -10px;
+  right: 100%;
+  left: auto;
+  opacity: 0;
+  height: auto !important;
+  padding-right: 10px;
+  overflow-y: unset;
+  pointer-events: none;
+  border-radius: 0 10px 10px 0;
+  background: #151A2D;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 999;
+
+}
+
+
+/* ✨ تفعيل ظهور القائمة عند الهوفر على nav-item أو على القائمة نفسها */
+.sidebar.collapsed .nav-item:hover > .dropdown-menu,
+.sidebar.collapsed .nav-item:has(.dropdown-menu:hover) > .dropdown-menu {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(10px);
+  border-radius: 10px;
+  border: 1px solid white;
+
+}
+
+
+
+
+/* تنسيق البادينغ */
+.sidebar.collapsed .dropdown-menu:has(.dropdown-link) {
+  padding: 7px 10px 7px 24px;
+}
+
+.dropdown-menu .nav-item .nav-link {
+  color: #F1F4FF;
+  padding: 9px 15px;
+}
+
+.sidebar.collapsed .dropdown-menu .nav-link {
+  padding: 7px 15px;
+}
+
+.dropdown-menu .nav-item .nav-link.dropdown-title {
+  display: none;
+  color: #fff;
+  padding: 9px 15px;
+}
+
+.dropdown-menu:has(.dropdown-link) .nav-item .dropdown-title {
+  font-weight: 500;
+  padding: 7px 15px;
+}
+
+.sidebar.collapsed .dropdown-menu .nav-item .dropdown-title {
+  display: block;
+}
+
+.sidebar-menu-button {
+  display: none;
+}
+
+/* Responsive media query code for small screens */
+@media (max-width: 708px) {
+  .sidebar-menu-button {
+    position: fixed;
+    left: 20px;
+    right: 40px;
+    top: 10px;
+    height: 40px;
+    width: 42px;
+    display: flex;
+    color: #F1F4FF;
+    background: #151A2D;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+
+  }
+  .sidebar{
+    display: none;
+    position: fixed;
+  }
+
+  .sidebar-toggler{
+    display: none;
+  }
+
+  .sidebar.collapsed {
+    width: 80px;
+    left: -270px;
+  }
+
+  .sidebar.collapsed .sidebar-header .sidebar-toggler {
+    transform: none;
+  }
+
+  .sidebar.collapsed .sidebar-nav .primary-nav {
+    transform: translateY(5px);
+
+  }
+}
+
+@media (min-width: 1208px) {
+  .sidebar {
+    display: block !important;
+  }
+}
+
+
+/* إخفاء سهم dropdown داخل القائمة الجانبية عند التصغير */
+/* .sidebar.collapsed .dropdown-icon {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0;
+  height: 0;
+} */
+
+

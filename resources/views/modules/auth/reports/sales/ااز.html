@@ -1,0 +1,76 @@
+<script>
+    // تهيئة الرسوم البيانية في دالة منفصلة
+    function initCharts() {
+        // مخطط توزيع الطلبات
+        const pieCtx = document.getElementById('requestsPieChart').getContext('2d');
+        if (window.pieChart) window.pieChart.destroy(); // تدمير المخطط القديم
+        window.pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['بناء', 'هدم', 'تعديل', 'صيانة'],
+                datasets: [{
+                    data: [650, 250, 200, 148],
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        rtl: true,
+                        labels: {
+                            font: {
+                                family: 'Tajawal',
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // مخطط الطلبات الشهري
+        const barCtx = document.getElementById('monthlyBarChart').getContext('2d');
+        if (window.barChart) window.barChart.destroy(); // تدمير المخطط القديم
+        window.barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                datasets: [{
+                    label: 'عدد الطلبات',
+                    data: [120, 190, 150, 200, 180, 210],
+                    backgroundColor: '#1a365d',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // بقية الدوال (تبقى كما هي)...
+    function updateEmployeeStats() { /* ... */ }
+    function updatePieChart() { /* ... */ }
+    function updateBarChart() { /* ... */ }
+    function exportTo(format) { /* ... */ }
+    function printReport() { /* ... */ }
+    function exportTableToExcel() { /* ... */ }
+    function generateReport() { /* ... */ }
+    function resetFilters() { /* ... */ }
+
+    // استدعاء التهيئة عند الحاجة
+    initCharts();
+</script>

@@ -1,0 +1,107 @@
+
+        :root {
+            --primary: #0d6efd;
+            --secondary: #6c757d;
+            --success: #198754;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #0dcaf0;
+            --dark: #212529;
+            --light: #f8f9fa;
+        }
+
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .stat-card {
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .stat-card i {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.2;
+            right: 20px;
+            top: 20px;
+        }
+
+        .stat-card h5 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card h2 {
+            font-size: 2rem;
+            margin-bottom: 0;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-container.with-controls {
+            padding-top: 10px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-header h5 {
+            margin-bottom: 0;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs .nav-link {
+            font-weight: 600;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 1rem;
+        }
+
+        .badge {
+            font-weight: 500;
+        }
+
+        .form-select-sm {
+            max-width: 200px;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* تخصيصات للواجهة العربية */
+        .sidebar-menu {
+            padding-right: 0;
+        }
+
+        .dropdown-menu {
+            text-align: right;
+        }
+

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب الرخصة</title>
+    <!-- Bootstrap 5 RTL -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-blue: #1d2d44;
+            --secondary-blue: #2c5282;
+            --gold-accent: #d69e2e;
+            --success-green: #2f855a;
+            --light-gray: #f7fafc;
+            --medium-gray: #e2e8f0;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            padding-top: 100px;
+        }
+
+        .process-container {
+            background-color: rgba(255, 255, 255, 0.726);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.021);
+            padding: 2rem;
+            border: 1px solid var(--medium-gray);
+            margin-top: 20px;
+        }
+
+        .process-stepper {
+            position: fixed;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            width: 100%;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--medium-gray);
+            height: 85px;
+            z-index: 1000;
+            padding: 0 20px;
+        }
+
+        .process-line {
+            position: absolute;
+            top: 25px;
+            right: 20%;
+            left: 20%;
+            height: 3px;
+            background-color: var(--medium-gray);
+            z-index: 1;
+            border-radius: 3px;
+        }
+
+        .process-fill {
+            position: absolute;
+            top: 25px;
+            right: 20%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-green), var(--gold-accent));
+            z-index: 2;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(47, 133, 90, 0.3);
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: center;
+            width: 60%;
+        }
+
+        .process-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            width: calc(100% / 3);
+            margin-top: 4px;
+        }
+
+        .step-bubble {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-bubble::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .process-step.completed .step-bubble {
+            background-color: var(--success-green);
+            border-color: rgba(47, 133, 90, 0.2);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .process-step.active .step-bubble {
+            border-color: var(--gold-accent);
+            background-color: white;
+            color: var(--primary-blue);
+            transform: scale(1.1);
+            animation: pulse 2s infinite;
+        }
+
+        .process-step.active .step-bubble::before {
+            opacity: 1;
+        }
+
+        .step-icon {
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .process-step.completed .step-icon {
+            transform: scale(1.2);
+        }
+
+        .step-title {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #718096;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .process-step.completed .step-title,
+        .process-step.active .step-title {
+            color: var(--primary-blue);
+            transform: translateY(5px);
+        }
+
+        .process-step.active .step-title {
+            font-weight: 700;
+        }
+
+        .step-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--gold-accent);
+            transition: width 0.3s ease;
+        }
+
+        .process-step.active .step-title::after {
+            width: 20px;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(214, 158, 46, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(214, 158, 46, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(214, 158, 46, 0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-accent), #b7791f);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 158, 46, 0.4);
+            color: white;
+        }
+
+        .btn-outline-blue {
+            background-color: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-blue:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--success-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 2px solid white;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 4;
+        }
+
+        .process-step.completed .completion-badge {
+            opacity: 1;
+            transform: scale(1);
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .official-icon {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .form-section {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .request-info {
+            display: flex;
+            align-items: center;
+            background-color: var(--light-gray);
+            padding: 8px 15px;
+            border-radius: 20px;
+            gap: 10px;
+        }
+
+        .request-info i {
+            color: var(--gold-accent);
+            font-size: 1.2rem;
+        }
+
+        .request-label {
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .request-number {
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Stepper Navigation -->
+    <div class="process-stepper">
+        <div class="process-line"></div>
+        <div class="process-fill" style="width: 0%;"></div>
+
+        <div class="process-steps">
+            <!-- Step 1 -->
+            <div class="process-step active" data-step="1">
+                <div class="step-bubble">
+                    <i class="bi bi-person-vcard step-icon"></i>
+                </div>
+                <span class="step-title">المواطن</span>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="process-step" data-step="2">
+                <div class="step-bubble">
+                    <i class="bi bi-send-check step-icon"></i>
+                </div>
+                <span class="step-title">الطلب</span>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="process-step" data-step="3">
+                <div class="step-bubble">
+                    <i class="bi bi-file-earmark-text step-icon"></i>
+                </div>
+                <span class="step-title">بيانات الرخصة</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <div class="request-info">
+                <i class="bi bi-file-earmark-text"></i>
+                <div>
+                    <span class="request-label">رقم الطلب:</span>
+                    <span class="request-number">16485348</span>
+                </div>
+            </div>
+
+            <button class="btn btn-outline-primary" id="prevBtn">
+                <i class="bi bi-arrow-right"></i> السابق
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="process-container">
+            <!-- Step 1 Content -->
+            <div class="step-content active" id="step1">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-vcard official-icon"></i>
+                    <h4 class="text-primary">معلومات المواطن</h4>
+                </div>
+
+                <div class="form-section">
+                    <h5 class="section-title">المعلومات الشخصية</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fullName" class="form-label">الاسم الكامل</label>
+                            <input type="text" class="form-control" id="fullName" placeholder="الاسم الكامل">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nationalId" class="form-label">رقم الهوية</label>
+                            <input type="text" class="form-control" id="nationalId" placeholder="رقم الهوية">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 Content -->
+            <div class="step-content" id="step2">
+                <div class="text-center mb-4">
+                    <i class="bi bi-send-check official-icon"></i>
+                    <h4 class="text-primary">تفاصيل الطلب</h4>
+                </div>
+
+                <div class="form-section">
+                    <h5 class="section-title">نوع الطلب</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="requestType" class="form-label">نوع الرخصة</label>
+                            <select class="form-select" id="requestType">
+                                <option selected disabled>اختر نوع الرخصة</option>
+                                <option value="1">رخصة بناء</option>
+                                <option value="2">رخصة تجارية</option>
+                                <option value="3">رخصة صناعية</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="requestDate" class="form-label">تاريخ الطلب</label>
+                            <input type="date" class="form-control" id="requestDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 Content -->
+            <div class="step-content" id="step3">
+                <div class="text-center mb-4">
+                    <i class="bi bi-file-earmark-text official-icon"></i>
+                    <h4 class="text-primary">بيانات الرخصة</h4>
+                </div>
+
+                <div class="form-section">
+                    <h5 class="section-title">تفاصيل الرخصة</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="licenseNumber" class="form-label">رقم الرخصة</label>
+                            <input type="text" class="form-control" id="licenseNumber" placeholder="سيتم توليده تلقائياً" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="licenseDuration" class="form-label">مدة الرخصة</label>
+                            <select class="form-select" id="licenseDuration">
+                                <option value="1">سنة واحدة</option>
+                                <option value="2">سنتين</option>
+                                <option value="5">5 سنوات</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <div></div> <!-- Empty div for spacing -->
+                <button class="btn btn-gold" id="nextBtn">
+                    حفظ الطلب <i class="bi bi-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.process-step');
+            const stepContents = document.querySelectorAll('.step-content');
+            const progressFill = document.querySelector('.process-fill');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            let currentStep = 1;
+            const totalSteps = steps.length;
+
+            function updateProgress() {
+                const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+
+                steps.forEach((step, index) => {
+                    step.classList.remove('completed', 'active');
+                    if (index < currentStep - 1) {
+                        step.classList.add('completed');
+                    } else if (index === currentStep - 1) {
+                        step.classList.add('active');
+                    }
+                });
+
+                prevBtn.disabled = currentStep === 1;
+                nextBtn.innerHTML = currentStep === totalSteps ?
+                    'إرسال الطلب <i class="bi bi-send"></i>' :
+                    'التالي <i class="bi bi-arrow-left"></i>';
+
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (parseInt(content.id.replace('step', '')) === currentStep) {
+                        content.classList.add('active');
+                    }
+                });
+            }
+
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateProgress();
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateProgress();
+                } else {
+                    // Submit form logic here
+                    alert('تم إرسال الطلب بنجاح');
+                }
+            });
+
+            // Initialize
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تراخيص البناء - إيصال الدفع</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #d4af37;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .receipt-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .receipt-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .receipt-logo {
+            max-height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .receipt-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .receipt-number {
+            background-color: var(--secondary-color);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .receipt-body {
+            padding: 30px;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin: 25px 0 15px;
+            font-weight: 700;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: #555;
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        .fees-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .fees-table th {
+            background-color: var(--light-gray);
+            padding: 12px;
+            text-align: right;
+        }
+
+        .fees-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: var(--light-gray);
+        }
+
+        .receipt-footer {
+            background-color: var(--light-gray);
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-print {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-send {
+            background-color: var(--secondary-color);
+            color: #000;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stamp {
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+            opacity: 0.8;
+            max-width: 120px;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                background: none;
+            }
+            .receipt-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <img src="/assets/img/logo.png" alt="شعار البلدية" class="receipt-logo">
+                <h1 class="receipt-title">إيصال سداد رسوم ترخيص بناء</h1>
+                <div class="receipt-number">رقم الإيصال: INV-2023-0587</div>
+            </div>
+
+            <div class="receipt-body">
+                <!-- معلومات أساسية -->
+                <div>
+                    <div class="info-row">
+                        <div class="info-label">تاريخ الإصدار:</div>
+                        <div class="info-value">12/05/2023 10:45 ص</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">طريقة الدفع:</div>
+                        <div class="info-value">تحويل بنكي (رقم المرجع: REF-789456)</div>
+                    </div>
+                </div>
+
+                <!-- معلومات الرخصة -->
+                <h3 class="section-title">معلومات الرخصة</h3>
+                <div>
+                    <div class="info-row">
+                        <div class="info-label">رقم الرخصة:</div>
+                        <div class="info-value">BLD-2023-1245</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">اسم المستفيد:</div>
+                        <div class="info-value">محمد أحمد عبدالله</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">رقم الهوية:</div>
+                        <div class="info-value">1234567890</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">نوع الرخصة:</div>
+                        <div class="info-value">ترخيص بناء سكني</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">موقع المشروع:</div>
+                        <div class="info-value">السبعين - شارع الجامعة</div>
+                    </div>
+                </div>
+
+                <!-- تفاصيل الرسوم -->
+                <h3 class="section-title">تفاصيل الرسوم</h3>
+                <table class="fees-table">
+                    <thead>
+                        <tr>
+                            <th>البند</th>
+                            <th>الوصف</th>
+                            <th>المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>رسوم البدروم (150 م²)</td>
+                            <td>12,500 ر.ي</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>رسوم الدور الأرضي (200 م²)</td>
+                            <td>28,600 ر.ي</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>رسوم 3 أدوار متكررة (180 م² لكل دور)</td>
+                            <td>60,480 ر.ي</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>رسوم الخدمات الإدارية</td>
+                            <td>1,000 ر.ي</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="2">الإجمالي</td>
+                            <td>102,580 ر.ي</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- QR Code للتحقق -->
+                <div class="qr-code">
+                    <img src="/assets/img/qr-code.png" alt="QR Code للتحقق" width="120">
+                    <p>مسح الكود للتحقق من صحة الرخصة</p>
+                </div>
+
+                <!-- ختم وتوقيع -->
+                <div style="position: relative; height: 100px;">
+                    <div style="text-align: left; margin-top: 30px;">
+                        <p>التوقيع: ...............................</p>
+                        <p>اسم المسؤول: أ. علي محمد</p>
+                        <p>منصب المسؤول: مدير قسم التراخيص</p>
+                    </div>
+                    <img src="/assets/img/stamp.png" alt="ختم البلدية" class="stamp">
+                </div>
+            </div>
+
+            <div class="receipt-footer">
+                <p>شكراً لتعاملكم مع نظام تراخيص البناء</p>
+                <p>للاستفسار: هاتف 012345678 - البريد الإلكتروني: licenses@mun.gov.ye</p>
+                <p>ساعات العمل: من الأحد إلى الخميس 8 صباحاً - 2 ظهراً</p>
+            </div>
+        </div>
+
+        <!-- أزرار التحكم -->
+        <div class="action-buttons no-print">
+            <button class="btn btn-print btn-lg" onclick="window.print()">
+                <i class="fas fa-print me-2"></i> طباعة الإيصال
+            </button>
+            <button class="btn btn-send btn-lg" data-bs-toggle="modal" data-bs-target="#sendModal">
+                <i class="fas fa-paper-plane me-2"></i> إرسال الإيصال
+            </button>
+            <a href="/dashboard" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home me-2"></i> العودة للرئيسية
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal إرسال الإيصال -->
+    <div class="modal fade" id="sendModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إرسال إيصال الدفع</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">البريد الإلكتروني المسجل</label>
+                        <input type="email" class="form-control" value="mohamed@example.com" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">رقم الجوال المسجل</label>
+                        <input type="tel" class="form-control" value="771234567" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">طريقة الإرسال</label>
+                        <select class="form-select">
+                            <option value="email">البريد الإلكتروني فقط</option>
+                            <option value="sms">رسالة نصية فقط</option>
+                            <option value="both" selected>البريد الإلكتروني والرسالة النصية</option>
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="includeLink">
+                        <label class="form-check-label" for="includeLink">
+                            تضمين رابط الرخصة الكاملة
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i> تأكيد الإرسال
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // يمكن إضافة أي وظائف JavaScript مطلوبة هنا
+        document.addEventListener('DOMContentLoaded', function() {
+            // مثال: تسجيل وقت عرض الإيصال
+            console.log('تم عرض الإيصال في: ' + new Date().toLocaleString());
+        });
+    </script>
+</body>
+</html>

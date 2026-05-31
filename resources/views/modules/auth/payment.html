@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الدفع - الفاتورة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+    </style>
+    @vite('resources/css/app.css')
+</head>
+<body class="font-arabic bg-gray-50 min-h-screen" x-data="{ activeTab: 'invoice', showPaymentModal: false }">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-yemen-red to-primary-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-building text-yemen-red text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">نظام تراخيص البناء</h1>
+                        <p class="text-primary-100">وزارة الإسكان والتنمية الحضرية - اليمن</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-primary-100">رقم النظام: SY-2024-001</p>
+                    <p class="text-primary-100" id="current-date"></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8">
+                <button @click="activeTab = 'invoice'"
+                        :class="activeTab === 'invoice' ? 'border-yemen-red text-yemen-red' : 'border-transparent text-gray-600 hover:text-yemen-red'"
+                        class="py-4 px-2 border-b-2 font-medium transition duration-300">
+                    <i class="fas fa-receipt mr-2"></i>الفاتورة
+                </button>
+                <button @click="activeTab = 'payments'"
+                        :class="activeTab === 'payments' ? 'border-yemen-red text-yemen-red' : 'border-transparent text-gray-600 hover:text-yemen-red'"
+                        class="py-4 px-2 border-b-2 font-medium transition duration-300">
+                    <i class="fas fa-credit-card mr-2"></i>المدفوعات
+                </button>
+                <button @click="activeTab = 'receipts'"
+                        :class="activeTab === 'receipts' ? 'border-yemen-red text-yemen-red' : 'border-transparent text-gray-600 hover:text-yemen-red'"
+                        class="py-4 px-2 border-b-2 font-medium transition duration-300">
+                    <i class="fas fa-file-invoice mr-2"></i>الإيصالات
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Invoice Tab -->
+        <div x-show="activeTab === 'invoice'" x-transition:enter.duration.300ms>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Invoice Card -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-yemen p-6 mb-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">فاتورة الدفع</h2>
+                            <span class="px-4 py-2 rounded-full text-sm font-semibold"
+                                  :class="{
+                                      'bg-green-100 text-green-800': '{{ $invoice->status }}' === 'مدفوعة',
+                                      'bg-yellow-100 text-yellow-800': '{{ $invoice->status }}' === 'مدفوعة جزئياً',
+                                      'bg-red-100 text-red-800': '{{ $invoice->status }}' === 'غير مدفوعة'
+                                  }">
+                                {{ $invoice->status }}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-700 mb-3">معلومات المستفيد</h3>
+                                <div class="space-y-2">
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-user ml-2 text-yemen-red"></i>
+                                        <span>{{ $invoice->beneficiary_name }}</span>
+                                    </p>
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-phone ml-2 text-yemen-red"></i>
+                                        <span>{{ $invoice->beneficiary_phone }}</span>
+                                    </p>
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-envelope ml-2 text-yemen-red"></i>
+                                        <span>{{ $invoice->beneficiary_email }}</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-700 mb-3">معلومات الفاتورة</h3>
+                                <div class="space-y-2">
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-hashtag ml-2 text-yemen-red"></i>
+                                        <span>{{ $invoice->invoice_number }}</span>
+                                    </p>
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-calendar ml-2 text-yemen-red"></i>
+                                        <span>{{ date('Y/m/d', strtotime($invoice->issued_at)) }}</span>
+                                    </p>
+                                    <p class="flex items-center text-gray-600">
+                                        <i class="fas fa-file-invoice ml-2 text-yemen-red"></i>
+                                        <span>{{ $invoice->request_number }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fees Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">نوع الرسم</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">المبلغ</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 text-gray-600">رسوم رفع مخلفات</td>
+                                        <td class="px-6 py-4 text-gray-800">{{ number_format($invoice->demolition_fees, 2) }} ريال</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-gray-600">رسوم أدوار</td>
+                                        <td class="px-6 py-4 text-gray-800">{{ number_format($invoice->floor_fees, 2) }} ريال</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-gray-600">رسوم رخصة إنشائية</td>
+                                        <td class="px-6 py-4 text-gray-800">{{ number_format($invoice->license_fees, 2) }} ريال</td>
+                                    </tr>
+                                    <tr class="bg-gradient-to-r from-primary-50 to-yemen-50">
+                                        <td class="px-6 py-4 font-semibold text-gray-800">المبلغ الإجمالي</td>
+                                        <td class="px-6 py-4 font-bold text-yemen-red text-lg">{{ number_format($invoice->total_amount, 2) }} ريال</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="bg-white rounded-2xl shadow-yemen p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">طرق الدفع المتاحة</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Cash Payment -->
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-yemen-red transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-gray-800">الدفع النقدي</h4>
+                                </div>
+                                <p class="text-gray-600 mb-4 text-sm">الدفع مباشرة في مقر الوزارة</p>
+                                <button @click="showPaymentModal = true; paymentMethod = 'نقدي'"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                    اختيار هذه الطريقة
+                                </button>
+                            </div>
+
+                            <!-- Bank Transfer -->
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-yemen-red transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-university text-blue-600 text-xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-gray-800">تحويل بنكي</h4>
+                                </div>
+                                <p class="text-gray-600 mb-4 text-sm">التحويل عبر البنوك المحلية</p>
+                                <button @click="showPaymentModal = true; paymentMethod = 'تحويل بنكي'"
+                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                    اختيار هذه الطريقة
+                                </button>
+                            </div>
+
+                            <!-- Credit Card -->
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-yemen-red transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-credit-card text-purple-600 text-xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-gray-800">بطاقة ائتمان</h4>
+                                </div>
+                                <p class="text-gray-600 mb-4 text-sm">الدفع الآمن عبر البطاقات</p>
+                                <button @click="showPaymentModal = true; paymentMethod = 'بطاقة ائتمان'"
+                                        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                    اختيار هذه الطريقة
+                                </button>
+                            </div>
+
+                            <!-- E-Wallet -->
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-yemen-red transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-mobile-alt text-orange-600 text-xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-gray-800">محفظة إلكترونية</h4>
+                                </div>
+                                <p class="text-gray-600 mb-4 text-sm">الدفع عبر المحافظ الإلكترونية</p>
+                                <button @click="showPaymentModal = true; paymentMethod = 'محفظة إلكترونية'"
+                                        class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                    اختيار هذه الطريقة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Payment Summary -->
+                    <div class="bg-white rounded-2xl shadow-yemen p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">ملخص الدفع</h3>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">المبلغ الإجمالي:</span>
+                                <span class="font-semibold">{{ number_format($invoice->total_amount, 2) }} ريال</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">المبلغ المدفوع:</span>
+                                <span class="font-semibold text-green-600">{{ number_format($paidAmount, 2) }} ريال</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">المبلغ المتبقي:</span>
+                                <span class="font-semibold text-yemen-red">{{ number_format($invoice->total_amount - $paidAmount, 2) }} ريال</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                            <div class="bg-yemen-red h-2 rounded-full"
+                                 :style="'width: {{ ($paidAmount / $invoice->total_amount) * 100 }}%'"></div>
+                        </div>
+
+                        <p class="text-center text-sm text-gray-600">
+                            تم دفع {{ number_format(($paidAmount / $invoice->total_amount) * 100, 1) }}% من المبلغ
+                        </p>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-2xl shadow-yemen p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">إجراءات سريعة</h3>
+
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300">
+                                <span class="text-gray-700">طباعة الفاتورة</span>
+                                <i class="fas fa-print text-yemen-red"></i>
+                            </button>
+                            <button class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300">
+                                <span class="text-gray-700">تحميل PDF</span>
+                                <i class="fas fa-download text-yemen-red"></i>
+                            </button>
+                            <button class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300">
+                                <span class="text-gray-700">مشاركة الفاتورة</span>
+                                <i class="fas fa-share-alt text-yemen-red"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Support -->
+                    <div class="bg-gradient-to-r from-yemen-red to-primary-600 rounded-2xl shadow-yemen p-6 text-white">
+                        <h3 class="text-xl font-semibold mb-4">الدعم الفني</h3>
+                        <p class="mb-4">لأي استفسارات أو مساعدة تقنية:</p>
+
+                        <div class="space-y-2">
+                            <p class="flex items-center">
+                                <i class="fas fa-phone ml-2"></i>
+                                <span>+967 1 234 567</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-envelope ml-2"></i>
+                                <span>support@housing.gov.ye</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-clock ml-2"></i>
+                                <span>من الأحد إلى الخميس: 8 ص - 3 م</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div x-show="showPaymentModal" x-transition:enter.duration.300ms x-transition:leave.duration.200ms
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full" @click.outside="showPaymentModal = false">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800">إتمام عملية الدفع</h3>
+                </div>
+
+                <div class="p-6">
+                    <form id="paymentForm" method="POST" action="{{ route('payments.process', $invoice->id) }}">
+                        @csrf
+                        <input type="hidden" name="payment_method" :value="paymentMethod">
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">طريقة الدفع</label>
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <span class="text-yemen-red font-semibold" x-text="paymentMethod"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">المبلغ المدفوع</label>
+                            <input type="number" name="amount"
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yemen-red focus:border-transparent"
+                                   placeholder="أدخل المبلغ"
+                                   max="{{ $invoice->total_amount - $paidAmount }}"
+                                   step="0.01" required>
+                        </div>
+
+                        <div class="mb-4" x-show="paymentMethod !== 'نقدي'">
+                            <label class="block text-gray-700 mb-2">رقم المعاملة</label>
+                            <input type="text" name="transaction_id"
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yemen-red focus:border-transparent"
+                                   placeholder="أدخل رقم المعاملة">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">ملاحظات</label>
+                            <textarea name="notes" rows="3"
+                                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yemen-red focus:border-transparent"
+                                      placeholder="أضف أي ملاحظات هنا..."></textarea>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button type="button" @click="showPaymentModal = false"
+                                    class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-6 rounded-lg transition duration-300">
+                                إلغاء
+                            </button>
+                            <button type="submit"
+                                    class="flex-1 bg-yemen-red hover:bg-red-800 text-white py-3 px-6 rounded-lg transition duration-300">
+                                تأكيد الدفع
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">عن النظام</h4>
+                    <p class="text-gray-300">نظام متكامل لإدارة تراخيص البناء والمدفوعات الإلكترونية في الجمهورية اليمنية</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">الرئيسية</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">الخدمات</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">الدعم</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">التواصل</h4>
+                    <p class="text-gray-300">صنعاء - اليمن</p>
+                    <p class="text-gray-300">info@housing.gov.ye</p>
+                    <p class="text-gray-300">+967 1 234 567</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+                <p class="text-gray-300">© 2024 وزارة الإسكان والتنمية الحضرية. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        import Swal from 'sweetalert2';
+
+// تأكيد عملية الدفع
+function confirmPayment(form) {
+    Swal.fire({
+        title: 'تأكيد عملية الدفع',
+        text: 'هل أنت متأكد من إتمام عملية الدفع؟',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#CE1126',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'نعم، تأكيد',
+        cancelButtonText: 'إلغاء'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        }
+    });
+}
+
+// عرض حالة الدفع
+function showPaymentStatus(status, message) {
+    const icon = status === 'success' ? 'success' : 'error';
+    Swal.fire({
+        icon: icon,
+        title: status === 'success' ? 'تم بنجاح' : 'خطأ',
+        text: message,
+        confirmButtonColor: '#CE1126'
+    });
+}
+
+// تحميل PDF
+function downloadPDF() {
+    Swal.fire({
+        title: 'جاري التحميل',
+        text: 'يتم الآن تحميل الفاتورة بصيغة PDF',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000
+    });
+}
+
+// مشاركة الفاتورة
+function shareInvoice() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'فاتورة الدفع',
+            text: 'فاتورة الدفع لنظام تراخيص البناء',
+            url: window.location.href
+        });
+    } else {
+        Swal.fire({
+            title: 'المشاركة',
+            text: 'نسخ رابط الفاتورة: ' + window.location.href,
+            icon: 'info'
+        });
+    }
+}
+
+export { confirmPayment, showPaymentStatus, downloadPDF, shareInvoice };
+    </script>
+
+    <script>
+        // تحديث التاريخ الحالي
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('ar-YE', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // تأثيرات scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-lg');
+            } else {
+                header.classList.remove('shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>

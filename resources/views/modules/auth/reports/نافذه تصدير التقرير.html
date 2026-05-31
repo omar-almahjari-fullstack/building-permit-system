@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نافذة تصدير تقارير تراخيص البناء - اليمن</title>
+    <!-- Bootstrap RTL -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #0a1f3a;
+            --secondary-blue: #1a365d;
+            --accent-gold: #d4af37;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .modal-content {
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--main-blue);
+            color: white;
+            border-bottom: 3px solid var(--accent-gold);
+            padding: 15px 20px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--main-blue);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--main-blue);
+            box-shadow: 0 0 0 0.25rem rgba(10, 31, 58, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--main-blue);
+            border-color: var(--main-blue);
+        }
+
+        .btn-primary {
+            background-color: var(--main-blue);
+            border-color: var(--main-blue);
+            padding: 8px 20px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            border-color: var(--secondary-blue);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            padding: 8px 20px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        /* زر لفتح المودال للاختبار */
+        .test-btn {
+            margin: 50px auto;
+            display: block;
+            width: 300px;
+            padding: 15px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر لفتح النافذة للاختبار -->
+    <button type="button" class="btn btn-primary test-btn" data-bs-toggle="modal" data-bs-target="#exportModal">
+        <i class="fas fa-file-export me-2"></i>
+        فتح نافذة التصدير
+    </button>
+
+    <!-- نافذة تصدير التقارير -->
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-export me-2"></i>
+                        خيارات تصدير تقارير تراخيص البناء
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="exportForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">اسم التقرير</label>
+                                <input type="text" class="form-control" value="تقرير_تراخيص_البناء_2023">
+                                <small class="text-muted">مثال: تقرير_الربع_الأول_2023</small>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">تنسيق الملف</label>
+                                <select class="form-select" id="exportFormat">
+                                    <option value="pdf">PDF (مستند)</option>
+                                    <option value="excel">Excel (جدول بيانات)</option>
+                                    <option value="csv">CSV (ملف نصي)</option>
+                                    <option value="word">Word (مستند نصي)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">نوع التقرير</label>
+                                <select class="form-select" id="reportType">
+                                    <option value="all">التقرير الشامل</option>
+                                    <option value="new">التراخيص الجديدة</option>
+                                    <option value="renew">تجديد التراخيص</option>
+                                    <option value="violations">المخالفات الإنشائية</option>
+                                    <option value="inspections">تقارير التفتيش</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">الفترة الزمنية</label>
+                                <select class="form-select" id="timePeriod">
+                                    <option value="all">كل الفترات</option>
+                                    <option value="day">اليوم</option>
+                                    <option value="week">الأسبوع</option>
+                                    <option value="month">الشهر</option>
+                                    <option value="quarter">الربع</option>
+                                    <option value="year">السنة</option>
+                                    <option value="custom">مخصص</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">المحافظة / المنطقة</label>
+                            <select class="form-select" id="regionSelect">
+                                <option value="all" selected>كل المحافظات</option>
+                                <option value="sanaa">أمانة العاصمة</option>
+                                <option value="aden">عدن</option>
+                                <option value="taiz">تعز</option>
+                                <option value="hodeidah">الحديدة</option>
+                                <option value="ibb">إب</option>
+                                <option value="dhamar">ذمار</option>
+                                <option value="hadramout">حضرموت</option>
+                                <option value="hajjah">حجة</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="includeCharts" checked>
+                                    <label class="form-check-label" for="includeCharts">تضمين الرسوم البيانية</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="includeSummary" checked>
+                                    <label class="form-check-label" for="includeSummary">تضمين الملخص الإحصائي</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="includeAttachments">
+                                    <label class="form-check-label" for="includeAttachments">تضمين المرفقات</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="watermark" checked>
+                                    <label class="form-check-label" for="watermark">إضافة ختم الوزارة</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات إضافية</label>
+                            <textarea class="form-control" rows="2" placeholder="أي ملاحظات تريد إضافتها للتقرير..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="confirmExport()">
+                        <i class="fas fa-file-export me-1"></i> تصدير التقرير
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مكتبات JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // دالة تصدير التقرير
+        function confirmExport() {
+            const format = document.getElementById('exportFormat').value;
+            const reportName = document.querySelector('#exportForm input').value;
+            const reportType = document.getElementById('reportType').value;
+            const timePeriod = document.getElementById('timePeriod').value;
+            const region = document.getElementById('regionSelect').value;
+
+            const includeCharts = document.getElementById('includeCharts').checked;
+            const includeSummary = document.getElementById('includeSummary').checked;
+
+            let message = `سيتم تصدير التقرير:
+- الاسم: ${reportName}
+- النوع: ${document.getElementById('reportType').options[document.getElementById('reportType').selectedIndex].text}
+- الصيغة: ${format.toUpperCase()}
+- الفترة: ${document.getElementById('timePeriod').options[document.getElementById('timePeriod').selectedIndex].text}
+- المنطقة: ${document.getElementById('regionSelect').options[document.getElementById('regionSelect').selectedIndex].text}
+- تشمل الرسوم: ${includeCharts ? 'نعم' : 'لا'}
+- تشمل الملخص: ${includeSummary ? 'نعم' : 'لا'}`;
+
+            alert(message);
+
+            // إخفاء النافذة المنبثقة
+            const exportModal = bootstrap.Modal.getInstance(document.getElementById('exportModal'));
+            exportModal.hide();
+        }
+    </script>
+</body>
+</html>
